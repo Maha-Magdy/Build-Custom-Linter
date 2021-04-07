@@ -1,14 +1,15 @@
 require 'colorize'
 
 class FileReader
-  attr_reader :file_path, :file, :error_message
+  attr_reader :file_path, :file_data, :error_message
   def initialize(file_path)
     @file_path = file_path
+    @error_message = []
     begin
-      @file = Nokogiri::HTML.parse(open(@file_path))
+      @file_data = File.readlines(@file_path)
     rescue
-      @file = nil
-      @error_message = 'The passed file isn\'t working! Can you check the file name or path again?'
+      @file_data = nil
+      @error_message << 'The passed file isn\'t working! Can you check the file name or path again?'
     end
   end
 end
