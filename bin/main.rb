@@ -21,5 +21,11 @@ if checking_file.error_message.empty?
   Reviewer.check_alt_attribute_with_images(checking_file)
   Reviewer.check_external_style_sheets_place(checking_file)
   Reviewer.use_lowercase_tag_names(checking_file)
-  puts  checking_file.error_message
+  if checking_file.error_message.any?
+    puts TTY::Box.error("× Found #{checking_file.error_message.length} error. Try to fix it to have clean code \n\n#{checking_file.error_message.join("\n\n")}")
+  else
+    puts TTY::Box.success('No offenses detected')
+  end
+else
+  puts TTY::Box.warn("#{checking_file.error_message.join('')}")
 end
