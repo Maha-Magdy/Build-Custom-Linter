@@ -89,4 +89,4 @@ describe Reviewer do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength, Layout/LineLength
+# rubocop:enable Layout/LineLength

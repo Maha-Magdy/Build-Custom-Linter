@@ -5,7 +5,7 @@ require 'open-uri'
 module Reviewer
   def self.proper_structure(checking_file)
     # rubocop:disable Layout/LineLength, Style/RegexpLiteral
-    checking_file.error_message << 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.' unless checking_file.file_data.join().match(/(.*)<html>(.*)<head>(.*)<title>(.*)<\/title>(.*)<\/head>(.*)<body>(.*)<\/body>(.*)<\/html>/im)
+    checking_file.error_message << 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.' unless checking_file.file_data.join.match(/(.*)<html>(.*)<head>(.*)<title>(.*)<\/title>(.*)<\/head>(.*)<body>(.*)<\/body>(.*)<\/html>/im)
     # rubocop:enable Layout/LineLength, Style/RegexpLiteral
   end
 
@@ -47,7 +47,7 @@ module Reviewer
     end
     check_close_tags(checking_file, non_self_open_tags, non_self_closing_tags)
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   def self.check_close_tags(checking_file, open_tags, close_tags)
     i = 0
@@ -99,13 +99,13 @@ module Reviewer
 
   def self.use_lowercase_tag_names(checking_file)
     checking_file.file_data.each_with_index do |line, index|
-      unless line.scan(/<[a-zA-Z]+/).join().delete('<').match(/[A-Z]+/).nil?
-        tag_name = line.scan(/<[a-zA-Z]+/).join()
+      unless line.scan(/<[a-zA-Z]+/).join.delete('<').match(/[A-Z]+/).nil?
+        tag_name = line.scan(/<[a-zA-Z]+/).join
         checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}>. keep tag names in lowercase because it is easier to read and maintain."
       end
       # rubocop:disable Style/RegexpLiteral, Style/Next
-      unless line.scan(/<\/[a-zA-Z]+>/).join().delete('<>\/').match(/[A-Z]+/).nil?
-        tag_name = line.scan(/<\/[a-zA-Z]+>/).join()
+      unless line.scan(/<\/[a-zA-Z]+>/).join.delete('<>\/').match(/[A-Z]+/).nil?
+        tag_name = line.scan(/<\/[a-zA-Z]+>/).join
         checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}. keep tag names in lowercase because it is easier to read and maintain."
         # rubocop:enable Layout/LineLength, Style/RegexpLiteral, Style/Next
       end
