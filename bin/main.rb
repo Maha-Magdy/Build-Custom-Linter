@@ -19,6 +19,7 @@ else
   checking_file = FileReader.new(ARGV[0])
 
   if checking_file.error_message.empty?
+    # rubocop:disable Style/Semicolon
     10.times { progressbar.increment; sleep 0.02 }
     Reviewer.proper_structure(checking_file)
     10.times { progressbar.increment; sleep 0.02 }
