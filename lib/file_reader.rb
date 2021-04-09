@@ -6,7 +6,7 @@ class FileReader
     @file_path = file_path
     @error_message = []
     begin
-      @file_data = File.readlines(@file_path)
+      @file_data = File.readlines(URI.open(@file_path))
     rescue
       @file_data = nil
       @error_message << 'The passed file isn\'t working! Can you check the file name or path again?'

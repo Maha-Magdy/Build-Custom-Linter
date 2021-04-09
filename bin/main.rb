@@ -7,6 +7,9 @@ require 'tty-box'
 require './lib/file_reader'
 require './lib/reviewer'
 
+system 'clear'
+system 'cls'
+
 if ARGV[0].nil?
   puts TTY::Box.warn('There is no file passed to check.')
 else
@@ -22,7 +25,7 @@ if checking_file.error_message.empty?
   Reviewer.check_external_style_sheets_place(checking_file)
   Reviewer.use_lowercase_tag_names(checking_file)
   if checking_file.error_message.any?
-    puts TTY::Box.error("× Found #{checking_file.error_message.length} error. Try to fix it to have clean code \n\n#{checking_file.error_message.join("\n\n")}")
+    puts TTY::Box.error("× Found #{checking_file.error_message.length} error. Try to fix it to have clean code \n\n#{checking_file.error_message.join("\n\n")}", padding: 1)
   else
     puts TTY::Box.success('No offenses detected')
   end
