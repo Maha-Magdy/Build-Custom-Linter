@@ -9,11 +9,14 @@ require './lib/reviewer'
 system 'clear'
 system 'cls'
 
-progressbar = ProgressBar.create
-
 if ARGV[0].nil?
   puts TTY::Box.warn('There is no file passed to check.')
 else
+  progressbar = ProgressBar.create( :format         => "%a %b\u{15E7}%i %p%% %t",
+    :progress_mark  => ' ',
+    :remainder_mark => "\u{FF65}",
+    :starting_at    => 0)
+    
   checking_file = FileReader.new(ARGV[0])
 
   if checking_file.error_message.empty?
