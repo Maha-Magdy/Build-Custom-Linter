@@ -5,7 +5,7 @@ require 'open-uri'
 module Reviewer
   def self.proper_structure(checking_file)
     # rubocop:disable Layout/LineLength, Style/RegexpLiteral
-    checking_file.error_message << 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.' unless checking_file.file_data.join('').match(/(.*)(<html>)|(HTML)(.*)(<head>)|(<HEAD>)(.*)(<title>)|(<TITLE>)(.*)(<\/title>)|(<\/TITLE>)(.*)(<\/head>)|(<\/HEAD>)(.*)(<body>)|(BODY)(.*)(<\/body>)|(\/BODY)(.*)(<\/html>)|(<\/HTML>)/m)
+    checking_file.error_message << 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.' unless checking_file.file_data.join('').match(/(.*)<html>(.*)<head>(.*)<title>(.*)<\/title>(.*)<\/head>(.*)<body>(.*)<\/body>(.*)<\/html>/im)
     # rubocop:enable Layout/LineLength, Style/RegexpLiteral
   end
 
@@ -81,7 +81,7 @@ module Reviewer
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
     file_data.css('img').each do |link|
       if link.to_s.match(/(alt(\s)*=(\s)*"(.)+")|(alt(\s)*=(\s)*'(.*)')/).nil?
-        checking_file.error_message << "At line #{link.line}, An <img> element must have a meaningful alt attribute for validation and accessibility reasons."
+        checking_file.error_message << "At line #{link.line}, An <img> element must have alt attribute for validation and accessibility reasons."
       end
     end
   end

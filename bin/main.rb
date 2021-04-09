@@ -1,6 +1,4 @@
-# rubocop:disable Style/Semicolon, Layout/LeadingCommentSpace
 #!/usr/bin/env ruby
-# rubocop:enable Layout/LeadingCommentSpace
 
 require 'nokogiri'
 require 'open-uri'
