@@ -42,12 +42,15 @@ You must run rspec in your terminal.
 # The expected result
 * It may become one of these options.
     * No offenses detected if your code follows the best practices.
+    
     <img src="./images/no-offenses-detected.png">
 
     * The number of detected errors that needed to fix.
+    
     <img src="./images/error-detected.png">
 
     * Warnings if you do not pass file path/valid HTML file
+    
     <img src="./images/no-file-passed-warning.png">
     
     <img src="./images/no-vaild-file.png">
