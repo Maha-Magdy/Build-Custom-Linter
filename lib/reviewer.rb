@@ -4,29 +4,30 @@ require 'open-uri'
 
 module Reviewer
   def self.proper_structure(checking_file)
-    # rubocop:disable Layout/LineLength
+    # rubocop:disable Layout/LineLength, Style/RegexpLiteral
     checking_file.error_message << 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.' unless checking_file.file_data.join('').match(/(.*)(<html>)|(HTML)(.*)(<head>)|(<HEAD>)(.*)(<title>)|(<TITLE>)(.*)(<\/title>)|(<\/TITLE>)(.*)(<\/head>)|(<\/HEAD>)(.*)(<body>)|(BODY)(.*)(<\/body>)|(\/BODY)(.*)(<\/html>)|(<\/HTML>)/m)
-    # rubocop:ensable Layout/LineLength
+    # rubocop:enable Layout/LineLength, Style/RegexpLiteral
   end
 
   def self.declare_correct_doctype(checking_file)
     if checking_file.file_data[0].match(/<!DOCTYPE/).nil?
+      # rubocop:disable Layout/LineLength
       checking_file.error_message << 'Declare the doctype to tell the browser the standards you are using to render your markup correctly.'
+      # rubocop:enableable Layout/LineLength
     elsif checking_file.file_data[0].match(/<!DOCTYPE html/).nil?
       checking_file.error_message << 'Declare the correct doctype for an HTML document'
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.close_tags(checking_file)
     self_closing_tags = %w[area base br col command embed hr img input keygen link meta param source track wbr]
     non_self_open_tags = Hash.new(0)
     non_self_closing_tags = Hash.new(0)
-
     checking_file.file_data.each do |line|
       open_tag_names = line.downcase.scan(/<[a-zA-Z]+/)
       open_tag_names.each do |open_tag_name|
         open_tag_name = open_tag_name.delete('<')
-
         unless open_tag_name.empty?
           i = 0
           while i < self_closing_tags.length
@@ -34,11 +35,11 @@ module Reviewer
             i += 1
           end
         end
-
         non_self_open_tags[open_tag_name] += 1 unless open_tag_name.empty?
       end
-
+      # rubocop:disable Style/RegexpLiteral
       close_tag_names = line.downcase.scan(/<\/[a-z]+>/)
+      # rubocop:enable Style/RegexpLiteral
       close_tag_names.each do |close_tag_name|
         close_tag_name = close_tag_name.delete('<>\/')
         non_self_closing_tags[close_tag_name] += 1 unless close_tag_name.empty?
@@ -46,6 +47,7 @@ module Reviewer
     end
     check_close_tags(checking_file, non_self_open_tags, non_self_closing_tags)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.check_close_tags(checking_file, open_tags, close_tags)
     i = 0
@@ -94,19 +96,15 @@ module Reviewer
 
   def self.use_lowercase_tag_names(checking_file)
     checking_file.file_data.each_with_index do |line, index|
-
       unless line.scan(/<[a-zA-Z]+/).join('').delete('<').match(/[A-Z]+/).nil?
         tag_name = line.scan(/<[a-zA-Z]+/).join('')
-        # rubocop:disable Layout/LineLength
         checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}>. keep tag names in lowercase because it is easier to read and maintain."
-        # rubocop:enable Layout/LineLength
       end
-
+      # rubocop:disable Style/RegexpLiteral, Style/Next
       unless line.scan(/<\/[a-zA-Z]+>/).join('').delete('<>\/').match(/[A-Z]+/).nil?
         tag_name = line.scan(/<\/[a-zA-Z]+>/).join('')
-        # rubocop:disable Layout/LineLength
         checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}. keep tag names in lowercase because it is easier to read and maintain."
-        # rubocop:enable Layout/LineLength
+        # rubocop:enable Layout/LineLength, Style/RegexpLiteral, Style/Next
       end
     end
   end

@@ -1,4 +1,4 @@
-# !/usr/bin/env ruby
+#!/usr/bin/env ruby
 
 require 'nokogiri'
 require 'open-uri'
@@ -32,5 +32,5 @@ if checking_file.error_message.empty?
     puts TTY::Box.success('No offenses detected')
   end
 else
-  puts TTY::Box.warn("#{checking_file.error_message.join('')}.to_s")
+  puts TTY::Box.warn(checking_file.error_message.join('').to_s)
 end
