@@ -1,7 +1,3 @@
-# rubocop:disable Style/Semicolon, Layout/LeadingCommentSpace
-#!/usr/bin/env ruby
-# rubocop:enable Layout/LeadingCommentSpace
-
 require 'nokogiri'
 require 'open-uri'
 require 'colorize'
@@ -21,6 +17,7 @@ else
   checking_file = FileReader.new(ARGV[0])
 
   if checking_file.error_message.empty?
+    # rubocop:disable Style/Semicolon
     10.times { progressbar.increment; sleep 0.02 }
     Reviewer.proper_structure(checking_file)
     10.times { progressbar.increment; sleep 0.02 }
@@ -48,6 +45,6 @@ else
   else
     100.times { progressbar.increment; sleep 0.025 }
     # rubocop:enable Style/Semicolon
-    puts TTY::Box.warn(checking_file.error_message.join('').to_s)
+    puts TTY::Box.warn(checking_file.error_message.join.to_s)
   end
 end
