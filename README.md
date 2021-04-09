@@ -49,7 +49,7 @@ You must run rspec in your terminal.
 
     * Warnings if you do not pass file path/valid HTML file
     <img src="./images/no-file-passed-warning.png">
-\n
+    
     <img src="./images/no-vaild-file.png">
 
 ## Here are examples of the best practices which this custom HTML linter check
