@@ -19,8 +19,9 @@ module Reviewer
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def self.close_tags(checking_file)
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     self_closing_tags = %w[area base br col command embed hr img input keygen link meta param source track wbr]
     non_self_open_tags = Hash.new(0)
     non_self_closing_tags = Hash.new(0)
@@ -78,8 +79,9 @@ module Reviewer
   end
 
   def self.check_alt_attribute_with_images(checking_file)
+    # rubocop:disable Security/Open
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
-
+    # rubocop:enable Security/Open
     file_data.css('img').each do |link|
       if link.to_s.match(/(alt(\s)*=(\s)*"(.)+")|(alt(\s)*=(\s)*'(.*)')/).nil?
         checking_file.error_message << "At line #{link.line}, An <img> element must have alt attribute for validation and accessibility reasons."
@@ -88,8 +90,9 @@ module Reviewer
   end
 
   def self.check_external_style_sheets_place(checking_file)
+    # rubocop:disable Security/Open
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
-
+    # rubocop:enable Security/Open
     all_style_sheets = file_data.css('link').count
     style_sheets_inside_head = file_data.css('head').css('link').count
     checking_file.error_message << 'Place all external style sheets within the <head> tag' if all_style_sheets > style_sheets_inside_head
