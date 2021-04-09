@@ -47,6 +47,6 @@ else
   else
     100.times { progressbar.increment; sleep 0.025 }
     # rubocop:enable Style/Semicolon
-    puts TTY::Box.warn(checking_file.error_message.join('').to_s)
+    puts TTY::Box.warn(checking_file.error_message.join().to_s)
   end
 end

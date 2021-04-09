@@ -1,6 +1,6 @@
 require './lib/file_reader'
 require './lib/reviewer'
-# rubocop:disable Metrics/BlockLength, Layout/LineLength
+# rubocop:disable Layout/LineLength
 describe Reviewer do
   let(:checking_clear_file) { FileReader.new('./experiment-files/clear-file.html') }
   let(:checking_unclear_file) { FileReader.new('./experiment-files/unclear-file.html') }
