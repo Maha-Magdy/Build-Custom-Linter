@@ -47,7 +47,7 @@ module Reviewer
     end
     check_close_tags(checking_file, non_self_open_tags, non_self_closing_tags)
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
 
   def self.check_close_tags(checking_file, open_tags, close_tags)
     i = 0
