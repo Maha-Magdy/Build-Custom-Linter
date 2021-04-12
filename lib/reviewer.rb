@@ -6,7 +6,7 @@ module Reviewer
   def self.proper_structure(checking_file)
     proper_structure_error = 'The page will not render correctly in every browser so '\
     'it\'s important to be consistent using the proper document structure.'
-    matching_regex = %r{(.*)<html>(.*)<head>(.*)<title>(.*)<\/title>(.*)<\/head>(.*)<body>(.*)<\/body>(.*)<\/html>}im
+    matching_regex = %r{(.*)<html>(.*)<head>(.*)<title>(.*)</title>(.*)</head>(.*)<body>(.*)</body>(.*)</html>}im
     checking_file.error_message << proper_structure_error unless checking_file.file_data.join.match(matching_regex)
   end
 
@@ -100,9 +100,9 @@ module Reviewer
         checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}>. "\
         'keep tag names in lowercase because it is easier to read and maintain.'
       end
-      next if line.scan(%r{<\/[a-zA-Z]+>}).join.delete('<>\/').match(/[A-Z]+/).nil?
+      next if line.scan(%r{</[a-zA-Z]+>}).join.delete('<>\/').match(/[A-Z]+/).nil?
 
-      tag_name = line.scan(%r{<\/[a-zA-Z]+>}).join
+      tag_name = line.scan(%r{</[a-zA-Z]+>}).join
       checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}. "\
       'keep tag names in lowercase because it is easier to read and maintain.'
     end
