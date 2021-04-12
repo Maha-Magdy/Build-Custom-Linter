@@ -20,7 +20,6 @@ module Reviewer
   end
 
   def self.close_tags(checking_file)
-    self_closing_tags = %w[area base br col command embed hr img input keygen link meta param source track wbr]
     non_self_open_tags = Hash.new(0)
     non_self_closing_tags = Hash.new(0)
     checking_file.file_data.each do |line|
@@ -28,21 +27,27 @@ module Reviewer
       open_tag_names.each do |open_tag_name|
         open_tag_name = open_tag_name.delete('<')
         unless open_tag_name.empty?
-          i = 0
-          while i < self_closing_tags.length
-            open_tag_name = '' if open_tag_name == self_closing_tags[i]
-            i += 1
-          end
+          open_tag_name = check_self_closing_tags(open_tag_name)
         end
         non_self_open_tags[open_tag_name] += 1 unless open_tag_name.empty?
       end
-      close_tag_names = line.downcase.scan(%r{<\/[a-z]+>})
+      close_tag_names = line.downcase.scan(%r{</[a-z]+>})
       close_tag_names.each do |close_tag_name|
         close_tag_name = close_tag_name.delete('<>\/')
         non_self_closing_tags[close_tag_name] += 1 unless close_tag_name.empty?
       end
     end
     check_close_tags(checking_file, non_self_open_tags, non_self_closing_tags)
+  end
+
+  def self.check_self_closing_tags(open_tag_name)
+    self_closing_tags = %w[area base br col command embed hr img input keygen link meta param source track wbr]
+    i = 0
+    while i < self_closing_tags.length
+      open_tag_name = '' if open_tag_name == self_closing_tags[i]
+      i += 1
+    end
+    open_tag_name
   end
 
   def self.check_close_tags(checking_file, open_tags, close_tags)
