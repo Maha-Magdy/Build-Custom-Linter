@@ -50,3 +50,17 @@ Style/HashTransformKeys:
   Enabled: false
 Style/HashTransformValues:
   Enabled: false
+Style/RegexpLiteral:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Security/Open:
+  Enabled: false
+Style/Next:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false

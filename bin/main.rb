@@ -3,8 +3,8 @@ require 'open-uri'
 require 'colorize'
 require 'tty-box'
 require 'ruby-progressbar'
-require './lib/file_reader'
-require './lib/reviewer'
+require_relative '../lib/file_reader'
+require_relative '../lib/reviewer'
 
 system 'clear'
 system 'cls'
@@ -38,9 +38,9 @@ else
     10.times { progressbar.increment; sleep 0.02 }
     if checking_file.error_message.any?
       20.times { progressbar.increment; sleep 0.02 }
-      # rubocop:disable Layout/LineLength
-      puts TTY::Box.error("× Found #{checking_file.error_message.length} error. Try to fix it to have clean code \n\n#{checking_file.error_message.join("\n\n")}", padding: 1)
-      # rubocop:enable Layout/LineLength
+      errors_status = "× Found #{checking_file.error_message.length} error."\
+      "Try to fix it to have clean code \n\n#{checking_file.error_message.join("\n\n")}"
+      puts TTY::Box.error(errors_status, padding: 1)
     else
       20.times { progressbar.increment; sleep 0.05 }
       puts TTY::Box.success('No offenses detected')

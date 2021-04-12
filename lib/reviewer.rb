@@ -4,24 +4,22 @@ require 'open-uri'
 
 module Reviewer
   def self.proper_structure(checking_file)
-    # rubocop:disable Layout/LineLength, Style/RegexpLiteral
-    checking_file.error_message << 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.' unless checking_file.file_data.join.match(/(.*)<html>(.*)<head>(.*)<title>(.*)<\/title>(.*)<\/head>(.*)<body>(.*)<\/body>(.*)<\/html>/im)
-    # rubocop:enable Layout/LineLength, Style/RegexpLiteral
+    proper_structure_error = 'The page will not render correctly in every browser so '\
+    'it\'s important to be consistent using the proper document structure.'
+    matching_regex = /(.*)<html>(.*)<head>(.*)<title>(.*)<\/title>(.*)<\/head>(.*)<body>(.*)<\/body>(.*)<\/html>/im
+    checking_file.error_message << proper_structure_error unless checking_file.file_data.join.match(matching_regex)
   end
 
   def self.declare_correct_doctype(checking_file)
     if checking_file.file_data[0].match(/<!DOCTYPE/).nil?
-      # rubocop:disable Layout/LineLength
-      checking_file.error_message << 'Declare the doctype to tell the browser the standards you are using to render your markup correctly.'
-      # rubocop:enableable Layout/LineLength
+      checking_file.error_message << 'Declare the doctype to tell the browser '\
+      'the standards you are using to render your markup correctly.'
     elsif checking_file.file_data[0].match(/<!DOCTYPE html/).nil?
       checking_file.error_message << 'Declare the correct doctype for an HTML document'
     end
   end
 
-  # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def self.close_tags(checking_file)
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     self_closing_tags = %w[area base br col command embed hr img input keygen link meta param source track wbr]
     non_self_open_tags = Hash.new(0)
     non_self_closing_tags = Hash.new(0)
@@ -38,9 +36,7 @@ module Reviewer
         end
         non_self_open_tags[open_tag_name] += 1 unless open_tag_name.empty?
       end
-      # rubocop:disable Style/RegexpLiteral
       close_tag_names = line.downcase.scan(/<\/[a-z]+>/)
-      # rubocop:enable Style/RegexpLiteral
       close_tag_names.each do |close_tag_name|
         close_tag_name = close_tag_name.delete('<>\/')
         non_self_closing_tags[close_tag_name] += 1 unless close_tag_name.empty?
@@ -48,7 +44,6 @@ module Reviewer
     end
     check_close_tags(checking_file, non_self_open_tags, non_self_closing_tags)
   end
-  # rubocop:enable Metrics/MethodLength
 
   def self.check_close_tags(checking_file, open_tags, close_tags)
     i = 0
@@ -64,7 +59,8 @@ module Reviewer
     while i < close_tags.keys.length
       if close_tags[close_tags.keys[i]] > open_tags[close_tags.keys[i]]
         extra_number = close_tags[close_tags.keys[i]] - open_tags[close_tags.keys[i]]
-        checking_file.error_message << "Unneeded extra #{extra_number} closing tags for element #{close_tags.keys[i]}. Check before you delete it/them may be you missed to put opening tag for it/them."
+        checking_file.error_message << "Unneeded extra #{extra_number} closing tags for element #{close_tags.keys[i]}"\
+        '. Check before you delete it/them may be you missed to put opening tag for it/them.'
       end
       i += 1
     end
@@ -73,42 +69,41 @@ module Reviewer
   def self.avoid_inline_style(checking_file)
     checking_file.file_data.each_with_index do |link, index|
       unless link.to_s.match(/(style=(\s)*"(.*)")|(style=(\s)*'(.*)')/).nil?
-        checking_file.error_message << "At line #{index + 1} Existing inline styles. Don't use inline styles because it makes it harder to update and maintain a file."
+        checking_file.error_message << "At line #{index + 1} Existing inline styles. "\
+        'Don\'t use inline styles because it makes it harder to update and maintain a file.'
       end
     end
   end
 
   def self.check_alt_attribute_with_images(checking_file)
-    # rubocop:disable Security/Open
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
-    # rubocop:enable Security/Open
     file_data.css('img').each do |link|
       if link.to_s.match(/(alt(\s)*=(\s)*"(.)+")|(alt(\s)*=(\s)*'(.*)')/).nil?
-        checking_file.error_message << "At line #{link.line}, An <img> element must have alt attribute for validation and accessibility reasons."
+        checking_file.error_message << "At line #{link.line}, "\
+        'An <img> element must have alt attribute for validation and accessibility reasons.'
       end
     end
   end
 
   def self.check_external_style_sheets_place(checking_file)
-    # rubocop:disable Security/Open
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
-    # rubocop:enable Security/Open
     all_style_sheets = file_data.css('link').count
     style_sheets_inside_head = file_data.css('head').css('link').count
-    checking_file.error_message << 'Place all external style sheets within the <head> tag' if all_style_sheets > style_sheets_inside_head
+    external_style_sheets_error = 'Place all external style sheets within the <head> tag'
+    checking_file.error_message << external_style_sheets_error if all_style_sheets > style_sheets_inside_head
   end
 
   def self.use_lowercase_tag_names(checking_file)
     checking_file.file_data.each_with_index do |line, index|
       unless line.scan(/<[a-zA-Z]+/).join.delete('<').match(/[A-Z]+/).nil?
         tag_name = line.scan(/<[a-zA-Z]+/).join
-        checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}>. keep tag names in lowercase because it is easier to read and maintain."
+        checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}>. "\
+        'keep tag names in lowercase because it is easier to read and maintain.'
       end
-      # rubocop:disable Style/RegexpLiteral, Style/Next
       unless line.scan(/<\/[a-zA-Z]+>/).join.delete('<>\/').match(/[A-Z]+/).nil?
         tag_name = line.scan(/<\/[a-zA-Z]+>/).join
-        checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}. keep tag names in lowercase because it is easier to read and maintain."
-        # rubocop:enable Layout/LineLength, Style/RegexpLiteral, Style/Next
+        checking_file.error_message << "At line #{index + 1}, uppercase characters have been used with #{tag_name}. "\
+        'keep tag names in lowercase because it is easier to read and maintain.'
       end
     end
   end

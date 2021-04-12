@@ -1,6 +1,6 @@
-require './lib/file_reader'
-require './lib/reviewer'
-# rubocop:disable Layout/LineLength
+require_relative '../lib/file_reader'
+require_relative '../lib/reviewer'
+
 describe Reviewer do
   let(:checking_clear_file) { FileReader.new('./experiment-files/clear-file.html') }
   let(:checking_unclear_file) { FileReader.new('./experiment-files/unclear-file.html') }
@@ -13,7 +13,8 @@ describe Reviewer do
 
     it 'Will return error if no proper structure has been used' do
       Reviewer.proper_structure(checking_unclear_file)
-      expect(checking_unclear_file.error_message).to include 'The page will not render correctly in every browser so it\'s important to be consistent using the proper document structure.'
+      expect(checking_unclear_file.error_message).to include 'The page will not render correctly'\
+      ' in every browser so it\'s important to be consistent using the proper document structure.'
     end
   end
 
@@ -25,7 +26,8 @@ describe Reviewer do
 
     it 'Will return error if no doctype has been declared' do
       Reviewer.declare_correct_doctype(checking_unclear_file)
-      expect(checking_unclear_file.error_message).to include 'Declare the doctype to tell the browser the standards you are using to render your markup correctly.'
+      expect(checking_unclear_file.error_message).to include 'Declare the doctype'\
+      ' to tell the browser the standards you are using to render your markup correctly.'
     end
   end
 
@@ -35,7 +37,7 @@ describe Reviewer do
       expect(checking_clear_file.error_message.length).to eql(0)
     end
 
-    it 'Will return error with the number of missing closing tags of any non-self closing tags have not their own closing tags' do
+    it 'Will return error with the number of missing closing tags' do
       Reviewer.close_tags(checking_unclear_file)
       expect(checking_unclear_file.error_message).to include 'Missing 1 closing tags for element head.'
     end
@@ -49,7 +51,8 @@ describe Reviewer do
 
     it 'Will return error with the number of the line in which an inline style has been used.' do
       Reviewer.avoid_inline_style(checking_unclear_file)
-      expect(checking_unclear_file.error_message).to include 'At line 6 Existing inline styles. Don\'t use inline styles because it makes it harder to update and maintain a file.'
+      expect(checking_unclear_file.error_message).to include 'At line 6 Existing inline styles.'\
+      ' Don\'t use inline styles because it makes it harder to update and maintain a file.'
     end
   end
 
@@ -59,9 +62,10 @@ describe Reviewer do
       expect(checking_clear_file.error_message.length).to eql(0)
     end
 
-    it 'Will return error with a line number of missing the alt attribute. of any img tag in the page has not the alt attribute.' do
+    it 'Will return error with a line number of any img missing its alt attribute.' do
       Reviewer.check_alt_attribute_with_images(checking_unclear_file)
-      expect(checking_unclear_file.error_message).to include 'At line 6, An <img> element must have alt attribute for validation and accessibility reasons.'
+      expect(checking_unclear_file.error_message).to include 'At line 6, An <img> element'\
+      ' must have alt attribute for validation and accessibility reasons.'
     end
   end
 
@@ -85,8 +89,8 @@ describe Reviewer do
 
     it 'Will return an error with the line number in which uppercase characters have been used as a name tag.' do
       Reviewer.use_lowercase_tag_names(checking_unclear_file)
-      expect(checking_unclear_file.error_message).to include 'At line 2, uppercase characters have been used with <HEAD>. keep tag names in lowercase because it is easier to read and maintain.'
+      expect(checking_unclear_file.error_message).to include 'At line 2, uppercase characters'\
+      ' have been used with <HEAD>. keep tag names in lowercase because it is easier to read and maintain.'
     end
   end
 end
-# rubocop:enable Layout/LineLength
