@@ -26,9 +26,7 @@ module Reviewer
       open_tag_names = line.downcase.scan(/<[a-zA-Z]+/)
       open_tag_names.each do |open_tag_name|
         open_tag_name = open_tag_name.delete('<')
-        unless open_tag_name.empty?
-          open_tag_name = check_self_closing_tags(open_tag_name)
-        end
+        open_tag_name = check_self_closing_tags(open_tag_name) unless open_tag_name.empty?
         non_self_open_tags[open_tag_name] += 1 unless open_tag_name.empty?
       end
       close_tag_names = line.downcase.scan(%r{</[a-z]+>})
@@ -81,7 +79,9 @@ module Reviewer
   end
 
   def self.check_alt_attribute_with_images(checking_file)
+    # rubocop:disable Security/Open
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
+    # rubocop:enable Security/Open
     file_data.css('img').each do |link|
       if link.to_s.match(/(alt(\s)*=(\s)*"(.)+")|(alt(\s)*=(\s)*'(.*)')/).nil?
         checking_file.error_message << "At line #{link.line}, "\
@@ -91,7 +91,9 @@ module Reviewer
   end
 
   def self.check_external_style_sheets_place(checking_file)
+    # rubocop:disable Security/Open
     file_data = Nokogiri::HTML(URI.open(checking_file.file_path))
+    # rubocop:enable Security/Open
     all_style_sheets = file_data.css('link').count
     style_sheets_inside_head = file_data.css('head').css('link').count
     external_style_sheets_error = 'Place all external style sheets within the <head> tag'
