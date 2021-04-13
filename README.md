@@ -9,7 +9,7 @@
 
 ## Getting Started
 
-To get a local copy up and running follow these simple example steps.
+To get a local copy up and running follow these simple steps.
 
 ### To clone this repo run this code on a terminal window: 
 
