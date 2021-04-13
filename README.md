@@ -11,17 +11,17 @@
 
 To get a local copy up and running follow these simple steps
 
-### To clone this repo run this code on a terminal window: 
+### To clone this repo, run this code on a terminal window: 
 
 git clone https://github.com/Maha-Magdy/Build-Custom-Linter.git
 
-### To have all gem files installed in your machine:
+### To have all gem files installed in your machine, run this command in your terminal:
 
-You must run bundle in your terminal.
+bundle
 
-### To run the TDD in your machine:
+### To run the TDD in your machine, run this command in your terminal:
 
-You must run rspec in your terminal.
+rspec
 
 ## Basic Usage
 
@@ -34,7 +34,7 @@ You must run rspec in your terminal.
     ruby bin/main.rb workspace.html
     ```
 
-    * Pass any local HTML file path/webpage path as an argument after ruby bin/main.rb, like this command.
+    * Pass any local HTML file path or webpage path as an argument after ruby bin/main.rb, like this command.
 
     ```ruby
     ruby bin/main.rb file_path
